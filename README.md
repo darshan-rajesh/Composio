@@ -81,9 +81,6 @@ pip install -r requirements.txt
 # Create .env file from example
 copy .env.example .env
 
-# Set your API Keys in .env:
-# OPENAI_API_KEY=sk-...
-# TAVILY_API_KEY=tvly-...
 ```
 
 Run the backend API server:
