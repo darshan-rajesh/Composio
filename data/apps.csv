@@ -1,0 +1,101 @@
+name,category,website
+Salesforce,CRM,https://www.salesforce.com
+HubSpot,CRM,https://www.hubspot.com
+Pipedrive,CRM,https://www.pipedrive.com
+Zoho CRM,CRM,https://www.zoho.com/crm
+Freshsales,CRM,https://www.freshworks.com/crm/sales
+Monday CRM,CRM,https://monday.com
+Close,CRM,https://close.com
+Copper,CRM,https://www.copper.com
+Insightly,CRM,https://www.insightly.com
+Nimble,CRM,https://www.nimble.com
+Zendesk,Support,https://www.zendesk.com
+Freshdesk,Support,https://www.freshdesk.com
+Intercom,Support,https://www.intercom.com
+Help Scout,Support,https://www.helpscout.com
+ServiceNow,Support,https://www.servicenow.com
+Jira Service Management,Support,https://www.atlassian.com/software/jira/service-management
+Zoho Desk,Support,https://www.zoho.com/desk
+LiveAgent,Support,https://www.liveagent.com
+Groove,Support,https://www.groovehq.com
+Kayako,Support,https://kayako.com
+Slack,Communications,https://slack.com
+Microsoft Teams,Communications,https://www.microsoft.com/en-us/microsoft-teams
+Discord,Communications,https://discord.com
+Zoom,Communications,https://zoom.us
+Twilio,Communications,https://www.twilio.com
+SendGrid,Communications,https://sendgrid.com
+Vonage,Communications,https://www.vonage.com
+RingCentral,Communications,https://www.ringcentral.com
+Telegram,Communications,https://telegram.org
+WhatsApp Business,Communications,https://business.whatsapp.com
+Mailchimp,Marketing,https://mailchimp.com
+ActiveCampaign,Marketing,https://www.activecampaign.com
+Marketo,Marketing,https://www.marketo.com
+HubSpot Marketing,Marketing,https://www.hubspot.com/products/marketing
+Brevo,Marketing,https://www.brevo.com
+ConvertKit,Marketing,https://convertkit.com
+Klaviyo,Marketing,https://www.klaviyo.com
+Drip,Marketing,https://www.drip.com
+Buffer,Marketing,https://buffer.com
+Hootsuite,Marketing,https://www.hootsuite.com
+Shopify,Ecommerce,https://www.shopify.com
+WooCommerce,Ecommerce,https://woocommerce.com
+BigCommerce,Ecommerce,https://www.bigcommerce.com
+Magento,Ecommerce,https://business.adobe.com/products/magento/magento-commerce.html
+Stripe,Ecommerce,https://stripe.com
+Square,Ecommerce,https://squareup.com
+PayPal,Ecommerce,https://www.paypal.com
+Chargebee,Ecommerce,https://www.chargebee.com
+Recurly,Ecommerce,https://recurly.com
+Paddle,Ecommerce,https://www.paddle.com
+Google Analytics,Data/SEO,https://analytics.google.com
+Mixpanel,Data/SEO,https://mixpanel.com
+Amplitude,Data/SEO,https://amplitude.com
+Segment,Data/SEO,https://segment.com
+Ahrefs,Data/SEO,https://ahrefs.com
+SEMrush,Data/SEO,https://www.semrush.com
+Moz,Data/SEO,https://moz.com
+Hotjar,Data/SEO,https://www.hotjar.com
+Datadog,Data/SEO,https://www.datadoghq.com
+Looker,Data/SEO,https://looker.com
+GitHub,Developer Tools,https://github.com
+GitLab,Developer Tools,https://about.gitlab.com
+Bitbucket,Developer Tools,https://bitbucket.org
+Jira,Developer Tools,https://www.atlassian.com/software/jira
+Linear,Developer Tools,https://linear.app
+Vercel,Developer Tools,https://vercel.com
+Netlify,Developer Tools,https://www.netlify.com
+Docker Hub,Developer Tools,https://hub.docker.com
+Postman,Developer Tools,https://www.postman.com
+CircleCI,Developer Tools,https://circleci.com
+Notion,Productivity,https://www.notion.so
+Asana,Productivity,https://asana.com
+Trello,Productivity,https://trello.com
+Monday.com,Productivity,https://monday.com
+ClickUp,Productivity,https://clickup.com
+Airtable,Productivity,https://airtable.com
+Todoist,Productivity,https://todoist.com
+Calendly,Productivity,https://calendly.com
+Zapier,Productivity,https://zapier.com
+Make,Productivity,https://www.make.com
+QuickBooks,Finance,https://quickbooks.intuit.com
+Xero,Finance,https://www.xero.com
+FreshBooks,Finance,https://www.freshbooks.com
+Wave,Finance,https://www.waveapps.com
+Brex,Finance,https://www.brex.com
+Plaid,Finance,https://plaid.com
+Bill.com,Finance,https://www.bill.com
+Expensify,Finance,https://www.expensify.com
+Gusto,Finance,https://gusto.com
+Ramp,Finance,https://ramp.com
+OpenAI,AI,https://openai.com
+Anthropic,AI,https://www.anthropic.com
+Google AI,AI,https://ai.google
+Cohere,AI,https://cohere.com
+Hugging Face,AI,https://huggingface.co
+Replicate,AI,https://replicate.com
+Stability AI,AI,https://stability.ai
+Jasper,AI,https://www.jasper.ai
+Copy.ai,AI,https://www.copy.ai
+Runway,AI,https://runwayml.com

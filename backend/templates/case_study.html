@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Composio SaaS Integration Landscape — Research Case Study</title>
+    <meta name="description" content="AI-powered research study analyzing 100 SaaS applications for integration buildability, API access, and MCP availability.">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #222240;
+            --border: #2a2a4a;
+            --text-primary: #e8e8f0;
+            --text-secondary: #a0a0c0;
+            --text-muted: #6a6a8a;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-gradient: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+            --green: #10b981;
+            --yellow: #f59e0b;
+            --red: #ef4444;
+            --blue: #3b82f6;
+            --pink: #ec4899;
+            --cyan: #06b6d4;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== Hero ===== */
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.12) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 50%, rgba(139,92,246,0.08) 0%, transparent 60%);
+            animation: heroGlow 8s ease-in-out infinite alternate;
+        }
+        @keyframes heroGlow {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-5%) scale(1.05); }
+        }
+        .hero-content { position: relative; z-index: 1; max-width: 900px; }
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border: 1px solid var(--accent-primary);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--accent-primary);
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        .hero-stat { text-align: center; }
+        .hero-stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+        /* ===== Layout ===== */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 5rem 0; }
+        .section-header { margin-bottom: 3rem; }
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .section-header p { color: var(--text-secondary); font-size: 1.1rem; }
+        .section-divider {
+            width: 60px;
+            height: 3px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+            margin: 1rem 0;
+        }
+
+        /* ===== Cards ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        .card:hover { border-color: var(--accent-primary); background: var(--bg-card-hover); }
+
+        /* ===== KPI Grid ===== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .kpi-card:hover { transform: translateY(-4px); border-color: var(--accent-primary); box-shadow: 0 8px 32px rgba(99,102,241,0.15); }
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .kpi-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.25rem; }
+
+        /* ===== Charts ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        .chart-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+        .chart-container { position: relative; height: 300px; }
+
+        /* ===== Workflow Diagram ===== */
+        .workflow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            flex-wrap: wrap;
+            padding: 2rem 0;
+        }
+        .workflow-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            min-width: 140px;
+            transition: all 0.3s ease;
+        }
+        .workflow-step:hover { border-color: var(--accent-primary); transform: scale(1.05); }
+        .workflow-step-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .workflow-step-title { font-size: 0.85rem; font-weight: 600; }
+        .workflow-arrow { color: var(--accent-primary); font-size: 1.5rem; padding: 0 0.5rem; }
+
+        /* ===== Insights ===== */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        .insight-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .insight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-gradient);
+        }
+        .insight-card h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .insight-card p { color: var(--text-secondary); font-size: 0.9rem; }
+        .insight-badge {
+            display: inline-block;
+            padding: 0.2rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+        .badge-auth { background: rgba(99,102,241,0.15); color: #818cf8; }
+        .badge-access { background: rgba(16,185,129,0.15); color: #34d399; }
+        .badge-mcp { background: rgba(236,72,153,0.15); color: #f472b6; }
+        .badge-opportunity { background: rgba(245,158,11,0.15); color: #fbbf24; }
+        .badge-risk { background: rgba(239,68,68,0.15); color: #f87171; }
+        .badge-buildability { background: rgba(6,182,212,0.15); color: #22d3ee; }
+        .badge-trend { background: rgba(139,92,246,0.15); color: #a78bfa; }
+
+        /* ===== Table ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--bg-card);
+        }
+        .table-controls {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .table-controls input, .table-controls select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+        .table-controls input:focus, .table-controls select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            cursor: pointer;
+        }
+        th:hover { color: var(--accent-primary); }
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(42,42,74,0.5);
+            white-space: nowrap;
+        }
+        tr:hover td { background: rgba(99,102,241,0.05); }
+        .pill {
+            display: inline-block;
+            padding: 0.15rem 0.6rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .pill-high { background: rgba(16,185,129,0.15); color: var(--green); }
+        .pill-medium { background: rgba(245,158,11,0.15); color: var(--yellow); }
+        .pill-low { background: rgba(239,68,68,0.15); color: var(--red); }
+        .pill-unknown { background: rgba(106,106,138,0.15); color: var(--text-muted); }
+
+        /* ===== Accuracy ===== */
+        .accuracy-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .accuracy-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+        .accuracy-value {
+            font-size: 3rem;
+            font-weight: 800;
+        }
+        .accuracy-value.green { color: var(--green); }
+        .accuracy-value.yellow { color: var(--yellow); }
+        .accuracy-value.blue { color: var(--blue); }
+
+        /* ===== Methodology ===== */
+        .methodology-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .method-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+        .method-step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+        .method-step h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .method-step p { color: var(--text-secondary); font-size: 0.85rem; }
+
+        /* ===== Limitations ===== */
+        .limitations-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .limitation-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+        .limitation-icon { color: var(--yellow); font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
+
+        /* ===== Footer ===== */
+        footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .hero-stats { gap: 1.5rem; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .accuracy-grid { grid-template-columns: 1fr; }
+            section { padding: 3rem 0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 1. Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <span class="hero-badge">🔬 AI-Powered Research Study</span>
+        <h1>SaaS Integration Landscape Analysis</h1>
+        <p>An automated research pipeline analyzed {{ total_apps }} SaaS applications across 10 categories to evaluate integration buildability, API accessibility, and MCP adoption for AI agent toolkits.</p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-value">{{ total_apps }}</div>
+                <div class="hero-stat-label">Apps Analyzed</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">{{ verified_count }}</div>
+                <div class="hero-stat-label">Verified</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">{{ avg_confidence }}%</div>
+                <div class="hero-stat-label">Avg Confidence</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">10</div>
+                <div class="hero-stat-label">Categories</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 2. Executive Summary -->
+<section id="executive-summary">
+    <div class="container">
+        <div class="section-header">
+            <h2>Executive Summary</h2>
+            <div class="section-divider"></div>
+            <p>Key findings from analyzing {{ total_apps }} SaaS applications for AI agent integration potential.</p>
+        </div>
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-value">{{ researched_count }}</div>
+                <div class="kpi-label">Researched</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">{{ verified_count }}</div>
+                <div class="kpi-label">Verified</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">{{ audited_count }}</div>
+                <div class="kpi-label">Human Audited</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">{{ avg_confidence }}%</div>
+                <div class="kpi-label">Avg Confidence</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">{{ high_confidence_count }}</div>
+                <div class="kpi-label">High Confidence</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">{{ low_confidence_count }}</div>
+                <div class="kpi-label">Low Confidence</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 3. Key Findings (Charts) -->
+<section id="key-findings" style="background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-header">
+            <h2>Key Findings</h2>
+            <div class="section-divider"></div>
+            <p>Distribution analysis across authentication methods, API types, and buildability.</p>
+        </div>
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>🔐 Authentication Methods</h3>
+                <div class="chart-container"><canvas id="authChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>🚪 Self-Serve vs Gated</h3>
+                <div class="chart-container"><canvas id="accessChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>🔌 API Types</h3>
+                <div class="chart-container"><canvas id="apiChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>🏗️ Buildability</h3>
+                <div class="chart-container"><canvas id="buildChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>🤖 MCP Availability</h3>
+                <div class="chart-container"><canvas id="mcpChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>📂 Categories</h3>
+                <div class="chart-container"><canvas id="categoryChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4. Methodology -->
+<section id="methodology">
+    <div class="container">
+        <div class="section-header">
+            <h2>Methodology</h2>
+            <div class="section-divider"></div>
+            <p>How our AI-powered pipeline produces reliable, verifiable research at scale.</p>
+        </div>
+        <div class="methodology-steps">
+            <div class="method-step">
+                <div class="method-step-num">1</div>
+                <h4>Data Collection</h4>
+                <p>100 SaaS apps curated across 10 categories with official websites.</p>
+            </div>
+            <div class="method-step">
+                <div class="method-step-num">2</div>
+                <h4>AI Research Agent</h4>
+                <p>5 targeted searches per app via Tavily, structured extraction via Qwen 3 LLM.</p>
+            </div>
+            <div class="method-step">
+                <div class="method-step-num">3</div>
+                <h4>Verification Agent</h4>
+                <p>Independent adversarial review — different search queries, skeptical evaluation.</p>
+            </div>
+            <div class="method-step">
+                <div class="method-step-num">4</div>
+                <h4>Confidence Scoring</h4>
+                <p>Transparent 0–100 scoring based on evidence quality, verification, and source count.</p>
+            </div>
+            <div class="method-step">
+                <div class="method-step-num">5</div>
+                <h4>Human Audit</h4>
+                <p>Stratified sample of 10–15 apps manually verified for accuracy benchmarking.</p>
+            </div>
+            <div class="method-step">
+                <div class="method-step-num">6</div>
+                <h4>Analytics & Insights</h4>
+                <p>Automated pattern detection and strategic insight generation.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. Agent Workflow -->
+<section id="workflow" style="background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-header">
+            <h2>Agent Workflow</h2>
+            <div class="section-divider"></div>
+        </div>
+        <div class="workflow">
+            <div class="workflow-step"><div class="workflow-step-icon">📋</div><div class="workflow-step-title">CSV Input</div></div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step"><div class="workflow-step-icon">🔍</div><div class="workflow-step-title">Research Agent</div></div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step"><div class="workflow-step-icon">✅</div><div class="workflow-step-title">Verification</div></div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step"><div class="workflow-step-icon">📊</div><div class="workflow-step-title">Confidence</div></div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step"><div class="workflow-step-icon">👤</div><div class="workflow-step-title">Human Audit</div></div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step"><div class="workflow-step-icon">📈</div><div class="workflow-step-title">Analytics</div></div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step"><div class="workflow-step-icon">📄</div><div class="workflow-step-title">Report</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- 6. Human Audit Results -->
+<section id="audit-results">
+    <div class="container">
+        <div class="section-header">
+            <h2>Human Audit Results</h2>
+            <div class="section-divider"></div>
+            <p>Accuracy metrics from manual verification of a stratified sample.</p>
+        </div>
+        <div class="accuracy-grid">
+            <div class="accuracy-card">
+                <div class="accuracy-value green">{{ audit_metrics.first_pass_accuracy }}%</div>
+                <div class="kpi-label">First-Pass Accuracy</div>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">Before verification agent corrections</p>
+            </div>
+            <div class="accuracy-card">
+                <div class="accuracy-value blue">{{ audit_metrics.post_verification_accuracy }}%</div>
+                <div class="kpi-label">Post-Verification Accuracy</div>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">After verification agent corrections</p>
+            </div>
+            <div class="accuracy-card">
+                <div class="accuracy-value yellow">{{ audit_metrics.total_audited }}</div>
+                <div class="kpi-label">Apps Audited</div>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">{{ audit_metrics.correct_count }} correct · {{ audit_metrics.incorrect_count }} incorrect · {{ audit_metrics.needs_review_count }} needs review</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 7. Insights -->
+<section id="insights" style="background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-header">
+            <h2>Strategic Insights</h2>
+            <div class="section-divider"></div>
+            <p>Patterns and opportunities identified across the SaaS landscape.</p>
+        </div>
+        <div class="insights-grid">
+            {% for insight in insights %}
+            <div class="insight-card">
+                <span class="insight-badge badge-{{ insight.category }}">{{ insight.category }}</span>
+                <h4>{{ insight.title }}</h4>
+                <p>{{ insight.description }}</p>
+                {% if insight.data_point %}<p style="color: var(--accent-primary); font-weight: 600; margin-top: 0.5rem; font-size: 0.85rem;">📊 {{ insight.data_point }}</p>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 8. Full Dataset Table -->
+<section id="dataset">
+    <div class="container">
+        <div class="section-header">
+            <h2>Full Dataset</h2>
+            <div class="section-divider"></div>
+            <p>Complete research results for all {{ total_apps }} applications.</p>
+        </div>
+        <div class="table-wrapper">
+            <div class="table-controls">
+                <input type="text" id="tableSearch" placeholder="Search apps..." oninput="filterTable()">
+                <select id="categoryFilter" onchange="filterTable()">
+                    <option value="">All Categories</option>
+                </select>
+                <select id="buildFilter" onchange="filterTable()">
+                    <option value="">All Buildability</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+            </div>
+            <div style="max-height: 600px; overflow-y: auto;">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)">App</th>
+                            <th onclick="sortTable(1)">Category</th>
+                            <th onclick="sortTable(2)">Auth</th>
+                            <th onclick="sortTable(3)">Access</th>
+                            <th onclick="sortTable(4)">API</th>
+                            <th onclick="sortTable(5)">MCP</th>
+                            <th onclick="sortTable(6)">Build.</th>
+                            <th onclick="sortTable(7)">Conf.</th>
+                            <th onclick="sortTable(8)">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 9. Limitations -->
+<section id="limitations" style="background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-header">
+            <h2>Limitations & Honest Reporting</h2>
+            <div class="section-divider"></div>
+        </div>
+        <div class="limitations-list">
+            <div class="limitation-item">
+                <span class="limitation-icon">⚠️</span>
+                <div><strong>Point-in-Time Data</strong><p style="color: var(--text-secondary); font-size: 0.85rem;">API access, pricing, and MCP availability change frequently. Findings reflect the research date.</p></div>
+            </div>
+            <div class="limitation-item">
+                <span class="limitation-icon">⚠️</span>
+                <div><strong>AI Interpretation Limits</strong><p style="color: var(--text-secondary); font-size: 0.85rem;">LLM-based extraction may misinterpret ambiguous documentation. Confidence scores reflect uncertainty.</p></div>
+            </div>
+            <div class="limitation-item">
+                <span class="limitation-icon">⚠️</span>
+                <div><strong>Search Coverage</strong><p style="color: var(--text-secondary); font-size: 0.85rem;">Web search may not find recently updated documentation or private developer portals.</p></div>
+            </div>
+            <div class="limitation-item">
+                <span class="limitation-icon">⚠️</span>
+                <div><strong>MCP Ecosystem Maturity</strong><p style="color: var(--text-secondary); font-size: 0.85rem;">MCP is a new standard. Many "No" results may become "Yes" as the ecosystem grows.</p></div>
+            </div>
+            <div class="limitation-item">
+                <span class="limitation-icon">⚠️</span>
+                <div><strong>Buildability Subjectivity</strong><p style="color: var(--text-secondary); font-size: 0.85rem;">Buildability verdicts reflect API accessibility, not implementation complexity.</p></div>
+            </div>
+            <div class="limitation-item">
+                <span class="limitation-icon">⚠️</span>
+                <div><strong>Sample Size</strong><p style="color: var(--text-secondary); font-size: 0.85rem;">100 apps across 10 categories provides directional insights but not exhaustive market coverage.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 10. Conclusions -->
+<section id="conclusions">
+    <div class="container">
+        <div class="section-header">
+            <h2>Conclusions</h2>
+            <div class="section-divider"></div>
+        </div>
+        <div class="card" style="max-width: 800px;">
+            <p style="font-size: 1.1rem; line-height: 1.8;">
+                This automated research pipeline demonstrates that AI agents can perform <strong>scalable, verifiable SaaS research</strong> with quantified confidence levels. The multi-agent verification approach caught errors and improved accuracy, while human auditing provided ground-truth benchmarking.
+            </p>
+            <br>
+            <p style="color: var(--text-secondary);">
+                Key takeaways for Composio's product operations: The SaaS integration landscape is dominated by REST APIs with OAuth2 authentication. Self-serve access is common in developer-focused categories, while enterprise categories remain gated. MCP adoption is early-stage, presenting a significant opportunity for platforms that can bridge this gap.
+            </p>
+            <br>
+            <p style="color: var(--text-secondary);">
+                The pipeline architecture — CSV → Research Agent → Verification Agent → Confidence Scoring → Human Audit → Analytics — is designed to be repeatable, scalable, and honest about its limitations.
+            </p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p>Composio SaaS Integration Research Pipeline · Generated {{ generated_at }}</p>
+        <p style="margin-top: 0.5rem;">Built with FastAPI, Qwen 3, Tavily, React, and Chart.js</p>
+    </div>
+</footer>
+
+<script>
+    // ===== Chart Configuration =====
+    Chart.defaults.color = '#a0a0c0';
+    Chart.defaults.borderColor = 'rgba(42,42,74,0.5)';
+    Chart.defaults.font.family = 'Inter, sans-serif';
+
+    const COLORS = [
+        '#6366f1', '#8b5cf6', '#a855f7', '#ec4899', '#f43f5e',
+        '#f59e0b', '#10b981', '#06b6d4', '#3b82f6', '#14b8a6'
+    ];
+
+    function createDoughnut(canvasId, chartData) {
+        const data = JSON.parse(chartData);
+        new Chart(document.getElementById(canvasId), {
+            type: 'doughnut',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    data: data.values,
+                    backgroundColor: COLORS.slice(0, data.labels.length),
+                    borderWidth: 0,
+                    hoverOffset: 8,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyleWidth: 8 } },
+                    tooltip: {
+                        callbacks: {
+                            label: function(ctx) {
+                                return `${ctx.label}: ${ctx.raw} (${data.percentages[ctx.dataIndex]}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function createBar(canvasId, chartData) {
+        const data = JSON.parse(chartData);
+        new Chart(document.getElementById(canvasId), {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    data: data.values,
+                    backgroundColor: COLORS.slice(0, data.labels.length).map(c => c + '99'),
+                    borderColor: COLORS.slice(0, data.labels.length),
+                    borderWidth: 1,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    // Render charts
+    createDoughnut('authChart', '{{ auth_chart | safe }}');
+    createDoughnut('accessChart', '{{ access_chart | safe }}');
+    createDoughnut('apiChart', '{{ api_chart | safe }}');
+    createDoughnut('buildChart', '{{ buildability_chart | safe }}');
+    createDoughnut('mcpChart', '{{ mcp_chart | safe }}');
+    createBar('categoryChart', '{{ category_chart | safe }}');
+
+    // ===== Table =====
+    const tableData = JSON.parse('{{ table_data | safe }}');
+    const tbody = document.getElementById('tableBody');
+    const categoryFilter = document.getElementById('categoryFilter');
+
+    // Populate category filter
+    const categories = [...new Set(tableData.map(a => a.category))].sort();
+    categories.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        categoryFilter.appendChild(opt);
+    });
+
+    function getPillClass(value) {
+        const v = (value || '').toLowerCase();
+        if (['high', 'verified', 'yes', 'correct'].includes(v)) return 'pill-high';
+        if (['medium', 'partial', 'partially verified', 'trial', 'needs review'].includes(v)) return 'pill-medium';
+        if (['low', 'no', 'contradicted', 'incorrect'].includes(v)) return 'pill-low';
+        return 'pill-unknown';
+    }
+
+    function renderTable(data) {
+        tbody.innerHTML = data.map(app => `
+            <tr>
+                <td><strong>${app.name}</strong></td>
+                <td>${app.category}</td>
+                <td>${app.auth_method}</td>
+                <td>${app.access_model}</td>
+                <td>${app.api_type}</td>
+                <td><span class="pill ${getPillClass(app.mcp_availability)}">${app.mcp_availability}</span></td>
+                <td><span class="pill ${getPillClass(app.buildability)}">${app.buildability}</span></td>
+                <td>${app.confidence}%</td>
+                <td><span class="pill ${getPillClass(app.verification_status)}">${app.verification_status}</span></td>
+            </tr>
+        `).join('');
+    }
+
+    function filterTable() {
+        const search = document.getElementById('tableSearch').value.toLowerCase();
+        const cat = categoryFilter.value;
+        const build = document.getElementById('buildFilter').value;
+
+        const filtered = tableData.filter(app => {
+            const matchSearch = !search || app.name.toLowerCase().includes(search) || app.category.toLowerCase().includes(search);
+            const matchCat = !cat || app.category === cat;
+            const matchBuild = !build || app.buildability === build;
+            return matchSearch && matchCat && matchBuild;
+        });
+        renderTable(filtered);
+    }
+
+    let sortDir = 1;
+    function sortTable(col) {
+        const keys = ['name', 'category', 'auth_method', 'access_model', 'api_type', 'mcp_availability', 'buildability', 'confidence', 'verification_status'];
+        const key = keys[col];
+        sortDir *= -1;
+        tableData.sort((a, b) => {
+            const va = typeof a[key] === 'number' ? a[key] : (a[key] || '').toLowerCase();
+            const vb = typeof b[key] === 'number' ? b[key] : (b[key] || '').toLowerCase();
+            return va < vb ? -sortDir : va > vb ? sortDir : 0;
+        });
+        filterTable();
+    }
+
+    renderTable(tableData);
+</script>
+
+</body>
+</html>
